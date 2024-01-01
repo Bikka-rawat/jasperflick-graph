@@ -10,34 +10,50 @@ public class graph : MonoBehaviour
 
     [SerializeField] int pow;
 
-    [SerializeField,Range(10,100)] int resolution;
-
+    [SerializeField,Range(10,100)] int resolution=10;
     Transform point;
+
+    Transform[] points;
 
     private void Awake()
     {
-        int i=0;
-        float step = 2f / resolution;
         
-        var Scale = Vector3.one *step;
+        float step = 2f / resolution;
+
+        var Scale = Vector3.one * step;
 
         Vector3 position=Vector3.zero;
 
-        for (; i < resolution; i++) { 
+        points = new Transform[resolution];
 
-        point = Instantiate(pointprefab);
+        for (int i=0; i < points.Length; i++) { 
 
-        position.x = ((i+0.5f)*step-1);
-            position.y =  Mathf.Sin(position.x*2f);
+        point = points[i] = Instantiate(pointprefab);
 
             
+
+        position.x = ( ( i + 0.5f ) * step - 1 );
+
+
+
 
             point.localPosition = position;
             point.localScale = Scale;
 
-            point.SetParent(transform,false);
+            point.SetParent(transform,false);   
+        }
+    }
+
+    private void Update()
+    {
+        float time = Time.time;
+        for (int i = 0; i < points.Length; i++)
+        {
+            Transform point = points[i];
+            Vector3 position = point.localPosition;
+            position.y =  Mathf.Sin(Mathf.PI*(position.x+time)+1);
+            point.localPosition = position;
             
         }
-
     }
 }
